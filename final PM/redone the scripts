@@ -1,0 +1,207 @@
+USE PMPayroll;
+
+CREATE TABLE salary_scales
+(
+    positiongroup_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    position_group VARCHAR(25) NOT NULL,
+    base_salary INTEGER NOT NULL,
+    salary_scale INTEGER NOT NULL
+);
+
+CREATE TABLE tax
+(
+    tax_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    tax_percentage DEC(10,3) NOT NULL
+);
+
+CREATE TABLE salary
+(
+    salary_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    gross_salary INTEGER,
+    net_salary DEC(10,3),
+    insurance_percent DEC(10,3),
+    pension_percent DEC(10,3),
+    benefits_percent DEC(10,3),
+    tax_id INTEGER
+);
+
+CREATE TABLE employees
+(
+    employee_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(25) NOT NULL,
+    last_name VARCHAR(25) NOT NULL,
+    job_title VARCHAR(25),
+    experience INTEGER,
+    salary_id INTEGER,
+    positiongroup_id INTEGER
+);
+
+ALTER TABLE salary
+    ADD CONSTRAINT fk_tax_id
+    FOREIGN KEY (tax_id) REFERENCES tax(tax_id);
+
+ALTER TABLE employees
+    ADD CONSTRAINT fk_salary_id
+    FOREIGN KEY (salary_id) REFERENCES salary(salary_id);
+ALTER TABLE employees
+    ADD CONSTRAINT fk_positiongroup_id
+    FOREIGN KEY (positiongroup_id) REFERENCES salary_scales(positiongroup_id);
+    
+   --  ------------------------------------------------------------------
+    
+    
+       insert into salary_scales (
+     position_group,
+       base_salary,
+        salary_scale) VALUES('Developer',
+        60000,
+        2);
+        insert into salary_scales (
+     position_group,
+       base_salary,
+        salary_scale) VALUES('Support',
+        40000,
+        1);
+        insert into salary_scales (
+     position_group,
+       base_salary,
+        salary_scale) VALUES('Manager',
+        75000,
+        3);
+        
+-- inserting into the tax table
+    insert into tax (
+    tax_percentage) VALUES(10);
+    insert into tax (
+    tax_percentage) VALUES(12.5);
+    insert into tax (
+    tax_percentage) VALUES(15);
+    
+   --  insert into salary (gross_salary,
+--      tax_id) VALUES(40000, 2);
+--      insert into salary (gross_salary,
+--      tax_id) VALUES(60000, 3);
+--      insert into salary (gross_salary,
+--      tax_id) VALUES(75000, 3);
+
+insert into salary(
+gross_salary,
+ net_salary,
+ insurance_percent,
+ pension_percent,
+ benefits_percent,
+ tax_id)VALUES(40000,
+ gross_salary - ( (gross_salary * insurance_percent) + (gross_salary * pension_percent) + (gross_salary * benefits_percent) ),
+ 0.018,
+ 0.04,
+ 0.03,
+ 2);
+ insert into salary(
+gross_salary,
+ net_salary,
+ insurance_percent,
+ pension_percent,
+ benefits_percent,
+ tax_id)VALUES(60000,
+ gross_salary - ( (gross_salary * insurance_percent) + (gross_salary * pension_percent) + (gross_salary * benefits_percent) ),
+ 0.018,
+ 0.04,
+ 0.03,
+ 2);
+ insert into salary(
+gross_salary,
+ net_salary,
+ insurance_percent,
+ pension_percent,
+ benefits_percent,
+ tax_id)VALUES(75000,
+ gross_salary - ( (gross_salary * insurance_percent) + (gross_salary * pension_percent) + (gross_salary * benefits_percent) ),
+ 0.018,
+ 0.04,
+ 0.03,
+ 2);
+    
+insert into employees (
+first_name,
+last_name,
+job_title,
+experience,
+ salary_id,
+  positiongroup_id) 
+  VALUES ('Darren',
+  'Jolley',
+  'Manager',
+  1,
+  1,
+  1
+  );
+  insert into employees (
+first_name,
+last_name,
+job_title,
+experience,
+ salary_id,
+  positiongroup_id) 
+  VALUES ('Josh',
+  'Campbell',
+  'Manager',
+  3,
+  1,
+  1
+  );
+    insert into employees (
+first_name,
+last_name,
+job_title,
+experience,
+ salary_id,
+  positiongroup_id) 
+  VALUES ('Sam',
+  'Skipton',
+  'Manager',
+  2,
+  3,
+  3
+  );
+    insert into employees (
+first_name,
+last_name,
+job_title,
+experience,
+ salary_id,
+  positiongroup_id) 
+  VALUES ('Dalton',
+  'Jordan',
+  'Manager',
+  3,
+  1,
+  1
+  );
+  
+  
+  --------------------------------------------------------------
+	-- test select statements
+  
+  
+  -- Should return Josh, Sam, Dalton
+  select * from employees where experience > 1;
+  
+   -- Should return everything from salary
+  select * from salary;
+  
+   -- Should return everything from salary_scales
+  select * from salary_scales;
+  
+   -- Should return everything from  tax
+  select * from tax;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
